@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}System Access{% endblock %}
+
+{% block content %}
+<div class="glass-container form-container">
+    <h1>System Access</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('login') }}">
+        {{ form.hidden_tag() }} <div class="form-group">
+            <label for="user_id">User ID</label>
+            <input type="text" id="user_id" name="user_id" required class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required class="form-control">
+        </div>
+
+        <button type="submit" class="btn">
+            Login
+        </button>
+    </form>
+</div>
+{% endblock %}

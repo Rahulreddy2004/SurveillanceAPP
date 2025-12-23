@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+
+{% block title %}Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="glass-container dashboard-container">
+    <h1>Alert Analytics</h1>
+
+    <div class="chart-row">
+        <div class="chart-container">
+            <h3>Alert Types Distribution</h3>
+            <canvas id="alertTypesChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h3>Alerts Per Day (Last 7 Days)</h3>
+            <canvas id="alertsOverTimeChart"></canvas>
+        </div>
+    </div>
+
+    <div class="summary-stats">
+        <h2>Summary</h2>
+        <p>Total Alerts Logged: <strong>{{ total_alerts }}</strong></p>
+    </div>
+
+</div>
+{% endblock %} {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // --- Data passed from Flask ---
+        const alertTypeCounts = {{ alert_type_counts | tojson }};
+        const alertsPerDay = {{ alerts_per_day | tojson }};
+        const textWhite = '{{ get_css_variable("--text-primary") or "#f0f0f0" }}';
+        const gridLines = '{{ get_css_variable("--border-color") or "rgba(0, 174, 255, 0.3)" }}';
+
+        // --- Chart 1: Alert Types Pie Chart ---
+        const typeLabels = Object.keys(alertTypeCounts);
+        const typeData = Object.values(alertTypeCounts);
+        const alertTypesCtx = document.getElementById('alertTypesChart').getContext('2d');
+        new Chart(alertTypesCtx, {
+            type: 'pie',
+            data: {
+                labels: typeLabels,
+                datasets: [{
+                    label: 'Alert Types',
+                    data: typeData,
+                    backgroundColor: [
+                        'rgba(255, 77, 77, 0.8)',  /* Red */
+                        'rgba(241, 196, 15, 0.8)', /* Yellow */
+                        'rgba(0, 174, 255, 0.8)', /* Blue */
+                        'rgba(46, 204, 113, 0.8)', /* Green */
+                        'rgba(155, 89, 182, 0.8)'  /* Purple */
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                 plugins: {
+                    legend: {
+                        labels: {
+                            color: textWhite
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- Chart 2: Alerts Over Time Line Chart ---
+        const dateLabels = Object.keys(alertsPerDay);
+        const countData = Object.values(alertsPerDay);
+        const alertsOverTimeCtx = document.getElementById('alertsOverTimeChart').getContext('2d');
+        new Chart(alertsOverTimeCtx, {
+            type: 'line',
+            data: {
+                labels: dateLabels,
+                datasets: [{
+                    label: 'Alerts Per Day',
+                    data: countData,
+                    fill: true,
+                    backgroundColor: 'rgba(0, 174, 255, 0.2)',
+                    borderColor: 'rgb(0, 174, 255)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                         ticks: {
+                             color: textWhite,
+                             stepSize: 1
+                         },
+                         grid: {
+                             color: gridLines
+                         }
+                    },
+                    x: {
+                         ticks: {
+                             color: textWhite
+                         },
+                          grid: {
+                             color: gridLines
+                         }
+                    }
+                },
+                 plugins: {
+                    legend: {
+                        labels: {
+                            color: textWhite
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

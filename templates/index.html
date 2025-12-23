@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}Feed Selection{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <h1>Select Monitoring Feed</h1>
+    
+    
+    <div class="detection-links">
+        <a href="{{ url_for('detect_page', detect_type='violence') }}" class="card-link">
+            <div class="card-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2>Violence Detection</h2>
+            <p>Real-time monitoring for aggressive actions and violence.</p>
+            <span class="btn card-btn">Activate Feed</span>
+        </a>
+        
+        <a href="{{ url_for('detect_page', detect_type='fall') }}" class="card-link">
+            <div class="card-icon">
+                <i class="fas fa-user-injured"></i>
+            </div>
+            <h2>Fall Detection</h2>
+            <p>Real-time monitoring for falls and sudden collapses.</p>
+            <span class="btn card-btn">Activate Feed</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

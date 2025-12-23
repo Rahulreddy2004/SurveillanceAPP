@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}Alert Logs{% endblock %}
+
+{% block content %}
+<div class="glass-container logs-container">
+    <h1>Detection Logs</h1>
+    
+    <table class="logs-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Timestamp (UTC)</th>
+                <th>Alert Type</th>
+                <th>Confidence</th>
+                <th>Captured Image</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for alert in alerts %}
+        <tr>
+            <td>{{ alert.id }}</td>
+            <td>{{ alert.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td class="alert-type">{{ alert.detection_type }}</td>
+            <td>{{ (alert.confidence_score * 100) | round(2) }}%</td>
+            <td>
+                <a href="{{ url_for('static', filename='captures/' + alert.image_filename) }}" target="_blank">
+                    <img src="{{ url_for('static', filename='captures/' + alert.image_filename) }}" alt="Capture">
+                </a>
+                {% if alert.video_filename and 'failed' not in alert.video_filename and 'error' not in alert.video_filename %}
+                    <a href="{{ url_for('static', filename='captures/videos/' + alert.video_filename) }}" target="_blank" class="video-link">
+                        View Video Clip
+                    </a>
+                {% elif alert.video_filename %}
+                     <span class="no-video">(Video Failed)</span>
+                {% else %}
+                     <span class="no-video">(No Video)</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr class="no-alerts-row">
+            <td colspan="5">No alerts have been logged yet.</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

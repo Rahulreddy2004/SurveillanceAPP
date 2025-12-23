@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Real-Time Surveillance System{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=cache_v) }}">
+</head>
+<body>
+
+    <video autoplay loop muted playsinline id="background-video">
+        <source src="{{ url_for('static', filename='img/tech_background.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <nav class="navbar">
+        <div class="brand">
+            <a href="{{ url_for('index') }}">Real-Time Surveillance System</a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('settings') }}">Settings</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logs') }}">View Logs</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <main class="content-container">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

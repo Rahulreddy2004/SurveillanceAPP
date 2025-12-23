@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}Application Settings{% endblock %}
+
+{% block content %}
+<div class="glass-container settings-container">
+    <h1>Configure Settings</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true, category_filter=['success', 'danger']) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('settings') }}">
+        {{ form.hidden_tag() }} <div class="form-group">
+            {{ form.confidence_threshold.label }}
+            {{ form.confidence_threshold(class="form-control") }}
+            {% if form.confidence_threshold.errors %}<ul class="errors">{% for error in form.confidence_threshold.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            <small>Trigger alerts for detections above this value (e.g., 0.8 for 80%).</small>
+        </div>
+
+        <div class="form-group">
+            {{ form.alert_cooldown_seconds.label }}
+            {{ form.alert_cooldown_seconds(class="form-control") }}
+             {% if form.alert_cooldown_seconds.errors %}<ul class="errors">{% for error in form.alert_cooldown_seconds.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+             <small>Minimum time (seconds) between saving alerts/sending notifications.</small>
+       </div>
+
+        <div class="form-group">
+            {{ form.recipient_email.label }}
+            {{ form.recipient_email(class="form-control", placeholder="user@example.com") }}
+             {% if form.recipient_email.errors %}<ul class="errors">{% for error in form.recipient_email.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+             <small>Email address for receiving alerts (leave blank to disable).</small>
+       </div>
+
+        <div class="form-group">
+            {{ form.recipient_phone.label }}
+            {{ form.recipient_phone(class="form-control", placeholder="+12345678900") }}
+             {% if form.recipient_phone.errors %}<ul class="errors">{% for error in form.recipient_phone.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            <small>Phone number for SMS alerts (Twilio trial requires verified numbers). Include country code. Leave blank to disable.</small>
+       </div>
+
+        <div class="form-group checkbox-group">
+            {{ form.enable_email_alerts() }}
+            {{ form.enable_email_alerts.label }}
+            {% if form.enable_email_alerts.errors %}<ul class="errors">{% for e in form.enable_email_alerts.errors %}<li>{{e}}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="form-group checkbox-group">
+            {{ form.enable_sms_alerts() }}
+            {{ form.enable_sms_alerts.label }}
+            {% if form.enable_sms_alerts.errors %}<ul class="errors">{% for e in form.enable_sms_alerts.errors %}<li>{{e}}</li>{% endfor %}</ul>{% endif %}
+        </div>
+         <div class="form-group checkbox-group">
+            {{ form.enable_beep_sound() }}
+            {{ form.enable_beep_sound.label }}
+            {% if form.enable_beep_sound.errors %}<ul class="errors">{% for e in form.enable_beep_sound.errors %}<li>{{e}}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        {{ form.submit(class="btn") }}
+    </form>
+
+</div>
+{% endblock %}

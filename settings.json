@@ -1,0 +1,9 @@
+{
+    "confidence_threshold": 0.85,
+    "alert_cooldown_seconds": 3,
+    "recipient_email": "",
+    "recipient_phone": "",
+    "enable_email_alerts": true,
+    "enable_sms_alerts": true,
+    "enable_beep_sound": true
+}
